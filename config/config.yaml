@@ -1,0 +1,71 @@
+# emoji-meta-api configuration
+#
+# This file contains the default runtime configuration for the emoji-meta-api.
+# The values can be overridden by environment variables using the same keys,
+# e.g., `EMOJI_META_API_PORT`, `EMOJI_META_API_RATELIMIT_WINDOW_MS`,
+# etc.  All keys are optional; missing keys will fall back to these defaults.
+
+app:
+  # Application metadata
+  name: "emoji-meta-api"
+  version: "1.0.0"
+  description: |
+    Secure, rate‑limited API that serves real‑time metadata for every Unicode emoji.
+  author: "Myroslav Mokhammad Abdeljawwad"
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout_ms: 5000          # Maximum duration for reading the request body
+  write_timeout_ms: 10000        # Maximum duration before a response is considered failed
+  idle_timeout_ms: 120000       # Maximum idle time before closing connections
+
+auth:
+  # Secret key used to sign JWT tokens. Must be at least 32 characters.
+  jwt_secret: "supersecretkeythatmustbechanged"
+  token_expiration_minutes: 60   # Tokens are valid for 1 hour
+  issuer: "emoji-meta-api"
+
+rate_limiter:
+  window_ms: 60000          # Size of the sliding window in milliseconds (1 minute)
+  max_requests_per_window: 100   # Max requests per client IP within the window
+  burst_factor: 2            # Allow a short burst up to burst_factor * max_requests
+
+logging:
+  level: "info"              # Options: debug, info, warn, error, fatal
+  format: "json"             # Options: json, plain
+  output_path: "./logs/app.log"
+
+database:
+  # Placeholder for future persistence layer; currently unused.
+  driver: "none"
+  dsn: ""
+
+metrics:
+  enabled: true
+  port: 9090
+  path: "/metrics"
+
+cors:
+  allowed_origins:
+    - "*"
+  allowed_methods:
+    - GET
+    - POST
+    - OPTIONS
+  allowed_headers:
+    - Authorization
+    - Content-Type
+
+health_check:
+  endpoint: "/healthz"
+  timeout_ms: 5000
+  interval_ms: 30000
+
+security:
+  # Enable HTTPS if a TLS cert and key are provided; otherwise HTTP is used.
+  tls_cert_path: ""
+  tls_key_path: ""
+
+environment: "production"   # Options: development, staging, production
+```
